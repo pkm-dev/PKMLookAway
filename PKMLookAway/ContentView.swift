@@ -6,6 +6,42 @@
 //
 
 import SwiftUI
+
+struct ContentView: View {
+    @StateObject private var timerManager = TimerManager()
+    @AppStorage("workDuration") private var workDuration: Double = 20
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Eye Protection")
+                .font(.title)
+            
+            VStack {
+                Text("Work Duration (minutes)")
+                Slider(value: $workDuration, in: 1...60, step: 1)
+                Text("\(Int(workDuration)) minutes")
+            }
+            .padding()
+            
+            Button(timerManager.isRunning ? "Stop" : "Start") {
+                if timerManager.isRunning {
+                    timerManager.stopTimer()
+                } else {
+                    timerManager.startTimer(workDuration: workDuration)
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            
+            Text("Status: \(timerManager.isRunning ? "Running" : "Not Running")")
+                .foregroundColor(timerManager.isRunning ? .green : .red)
+        }
+        .padding()
+        .frame(width: 300, height: 200)
+    }
+}
+
+/*
+import SwiftUI
 import SwiftData
 
 struct ContentView: View {
@@ -64,3 +100,4 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
+*/
